@@ -90,10 +90,16 @@ const LoginPage = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {isRegister && (
-              <div>
-                <Label htmlFor="name">Full Name</Label>
-                <Input id="name" placeholder="Your full name" className="mt-1.5" />
-              </div>
+              <>
+                <div>
+                  <Label htmlFor="name">Full Name</Label>
+                  <Input id="name" placeholder="Your full name" className="mt-1.5" />
+                </div>
+                <div>
+                  <Label htmlFor="phone">Phone Number</Label>
+                  <Input id="phone" type="tel" placeholder="+39 555 123 4567" className="mt-1.5" />
+                </div>
+              </>
             )}
             <div>
               <Label htmlFor="email">Email</Label>
