@@ -524,7 +524,7 @@ const OnboardingPage = () => {
             </Button>
           ) : (
             <Button onClick={handleSubmit} className="gradient-primary text-primary-foreground border-0">
-              Submit Onboarding <Send className="h-4 w-4 ml-2" />
+              Submit <Send className="h-4 w-4 ml-2" />
             </Button>
           )}
         </div>
