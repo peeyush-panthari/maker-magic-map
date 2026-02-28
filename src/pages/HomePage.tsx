@@ -13,10 +13,10 @@ const features = [
 ];
 
 const stats = [
-  { value: '2,500+', label: 'Partner Hotels' },
+  { value: '20,000+', label: 'Partner Hotels' },
   { value: '12M+', label: 'Bookings Managed' },
   { value: '98%', label: 'Partner Satisfaction' },
-  { value: '45+', label: 'Countries' },
+  { value: '45+', label: 'Customers from 45+ Countries' },
 ];
 
 const HomePage = () => {
@@ -64,7 +64,7 @@ const HomePage = () => {
             <div className="flex items-center justify-center gap-4">
               <Link to="/login?mode=register">
                 <Button size="lg" className="gradient-primary text-primary-foreground border-0 h-12 px-8 text-base">
-                  Start Onboarding <ArrowRight className="ml-2 h-4 w-4" />
+                  Become a Partner <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
               <Link to="/login">
