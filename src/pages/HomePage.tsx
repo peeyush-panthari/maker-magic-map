@@ -58,8 +58,7 @@ const HomePage = () => {
               <span className="text-primary">Business With Us</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-              Join thousands of hotels worldwide on the Starhotels platform. 
-              Self-serve onboarding, powerful analytics, and AI-driven content tools — all in one place.
+              Join thousands of hotels across Europe on the Starhotels platform to reach Millions of travelers across Globe. Self-serve onboarding, powerful analytics, and AI-driven content tools — all in one place.
             </p>
             <div className="flex items-center justify-center gap-4">
               <Link to="/login?mode=register">
