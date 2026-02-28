@@ -142,9 +142,12 @@ export const MOCK_LEADERBOARD = [
 ];
 
 export const MOCK_GOOGLE_PLACES = [
-  { name: 'Hotel Splendido', address: 'Via Roma 15, Florence', coordinates: { lat: 43.77, lng: 11.25 }, phone: '+39 055 1234567' },
-  { name: 'Palazzo Luxury Hotel', address: 'Via Veneto 42, Rome', coordinates: { lat: 41.91, lng: 12.49 }, phone: '+39 06 9876543' },
-  { name: 'Hotel Belvedere', address: 'Corso Buenos Aires 8, Milan', coordinates: { lat: 45.48, lng: 9.21 }, phone: '+39 02 5551234' },
-  { name: 'Ca\' Sagredo Hotel', address: 'Campo Santa Sofia, Venice', coordinates: { lat: 45.44, lng: 12.33 }, phone: '+39 041 2413111' },
-  { name: 'Hotel Continental', address: 'Via Balbi 33, Genoa', coordinates: { lat: 44.41, lng: 8.93 }, phone: '+39 010 2612641' },
+  { name: 'Hotel Bella Vista', address: 'Via Roma 42, Florence, Italy', coordinates: { lat: 43.77, lng: 11.25 }, phone: '+39 055 1234567' },
+  { name: 'Grand Palace Hotel', address: 'Piazza del Duomo 5, Milan, Italy', coordinates: { lat: 45.46, lng: 9.19 }, phone: '+39 02 5551234' },
+  { name: 'Marina Bay Resort', address: 'Corso Italia 28, Genoa, Italy', coordinates: { lat: 44.41, lng: 8.93 }, phone: '+39 010 2612641' },
+  { name: 'Hotel Splendido', address: 'Via Roma 15, Florence, Italy', coordinates: { lat: 43.77, lng: 11.25 }, phone: '+39 055 1234567' },
+  { name: 'Palazzo Luxury Hotel', address: 'Via Veneto 42, Rome, Italy', coordinates: { lat: 41.91, lng: 12.49 }, phone: '+39 06 9876543' },
+  { name: 'Hotel Belvedere', address: 'Corso Buenos Aires 8, Milan, Italy', coordinates: { lat: 45.48, lng: 9.21 }, phone: '+39 02 5551234' },
+  { name: 'Ca\' Sagredo Hotel', address: 'Campo Santa Sofia, Venice, Italy', coordinates: { lat: 45.44, lng: 12.33 }, phone: '+39 041 2413111' },
+  { name: 'Hotel Continental', address: 'Via Balbi 33, Genoa, Italy', coordinates: { lat: 44.41, lng: 8.93 }, phone: '+39 010 2612641' },
 ];
