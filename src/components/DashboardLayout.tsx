@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { Star, Home, Palette, DollarSign, BarChart3, Globe2, Bell, Settings, LogOut, Menu, X } from 'lucide-react';
+import { Star, Home, Palette, DollarSign, BarChart3, Globe2, Bell, Settings, LogOut, Menu, X, CalendarCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { MOCK_NOTIFICATIONS } from '@/data/mockData';
@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { to: '/dashboard', icon: Home, label: 'Home', end: true },
+  { to: '/dashboard/bookings', icon: CalendarCheck, label: 'Bookings' },
   { to: '/dashboard/content', icon: Palette, label: 'Content' },
   { to: '/dashboard/rates', icon: DollarSign, label: 'Rates' },
   { to: '/dashboard/performance', icon: BarChart3, label: 'Performance' },
