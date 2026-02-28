@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, ArrowLeft, ArrowRight, Check, Building2, BedDouble, FileText, Upload, Wifi, Palette, Send } from 'lucide-react';
+import { Star, ArrowLeft, ArrowRight, Check, Building2, BedDouble, FileText, Upload, Wifi, Palette, Send, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -171,40 +171,65 @@ const OnboardingPage = () => {
           >
             {/* Step 0: Hotel Basics */}
             {step === 0 && (
-              <div className="space-y-5">
+              <div className="space-y-6">
                 <h2 className="text-xl font-bold text-foreground">Hotel Basics</h2>
-                <div>
-                  <Label>Hotel Name</Label>
+
+                {/* Google Places Search Bar */}
+                <div className="rounded-xl border-2 border-primary/20 bg-accent/30 p-5">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Search className="h-5 w-5 text-primary" />
+                    <span className="font-semibold text-foreground">Search Your Hotel (Google Places)</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-3">Start typing your hotel name to auto-fill all details below</p>
                   <div className="relative">
-                    <Input value={hotelName} onChange={e => handleHotelSearch(e.target.value)} placeholder="Search for your hotel..." className="mt-1.5" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      value={hotelName}
+                      onChange={e => handleHotelSearch(e.target.value)}
+                      placeholder="e.g. Hotel Splendido, Palazzo Luxury Hotel..."
+                      className="pl-10 h-11 bg-card"
+                    />
                     {suggestions.length > 0 && (
                       <div className="absolute z-10 top-full mt-1 w-full bg-card border border-border rounded-lg shadow-lg">
                         {suggestions.map(s => (
-                          <button key={s.name} onClick={() => selectPlace(s)} className="w-full text-left px-4 py-2.5 hover:bg-accent text-sm text-foreground">
-                            <span className="font-medium">{s.name}</span>
-                            <span className="text-muted-foreground ml-2">— {s.address}</span>
+                          <button key={s.name} onClick={() => selectPlace(s)} className="w-full text-left px-4 py-3 hover:bg-accent text-sm text-foreground border-b border-border last:border-0">
+                            <div className="flex items-center gap-2">
+                              <Building2 className="h-4 w-4 text-primary shrink-0" />
+                              <div>
+                                <span className="font-medium">{s.name}</span>
+                                <span className="text-muted-foreground block text-xs">{s.address}</span>
+                              </div>
+                            </div>
                           </button>
                         ))}
                       </div>
                     )}
                   </div>
                 </div>
-                <div>
-                  <Label>Address</Label>
-                  <Input value={address} onChange={e => setAddress(e.target.value)} className="mt-1.5" placeholder="Auto-filled from search" />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div><Label>Phone</Label><Input value={phone} onChange={e => setPhone(e.target.value)} className="mt-1.5" placeholder="+39 ..." /></div>
-                  <div><Label>Email</Label><Input value={email} onChange={e => setEmail(e.target.value)} className="mt-1.5" type="email" placeholder="info@hotel.com" /></div>
-                </div>
-                <div>
-                  <Label>Star Rating</Label>
-                  <Select value={starRating} onValueChange={setStarRating}>
-                    <SelectTrigger className="mt-1.5"><SelectValue placeholder="Select rating" /></SelectTrigger>
-                    <SelectContent>
-                      {[1,2,3,4,5].map(r => <SelectItem key={r} value={String(r)}>{r} Star{r > 1 ? 's' : ''}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
+
+                {/* Auto-filled fields */}
+                <div className="space-y-4">
+                  <div>
+                    <Label>Hotel Name</Label>
+                    <Input value={hotelName} onChange={e => setHotelName(e.target.value)} className="mt-1.5" placeholder="Hotel name" />
+                  </div>
+                  <div>
+                    <Label>Address</Label>
+                    <Input value={address} onChange={e => setAddress(e.target.value)} className="mt-1.5" placeholder="Auto-filled from search" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div><Label>Phone</Label><Input value={phone} onChange={e => setPhone(e.target.value)} className="mt-1.5" placeholder="+39 ..." /></div>
+                    <div><Label>Email</Label><Input value={email} onChange={e => setEmail(e.target.value)} className="mt-1.5" type="email" placeholder="info@hotel.com" /></div>
+                  </div>
+                  <div>
+                    <Label>Star Rating</Label>
+                    <Select value={starRating} onValueChange={setStarRating}>
+                      <SelectTrigger className="mt-1.5"><SelectValue placeholder="Select rating" /></SelectTrigger>
+                      <SelectContent>
+                        {[1,2,3,4,5].map(r => <SelectItem key={r} value={String(r)}>{r} Star{r > 1 ? 's' : ''}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
             )}
