@@ -181,36 +181,33 @@ const OnboardingPage = () => {
                 <h2 className="text-xl font-bold text-foreground">Hotel Basics</h2>
 
                 {/* Google Places Search Bar */}
-                <div className="rounded-xl border-2 border-primary/20 bg-accent/30 p-5">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Search className="h-5 w-5 text-primary" />
-                    <span className="font-semibold text-foreground">Search Your Hotel (Google Places)</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mb-3">Start typing your hotel name to auto-fill all details below</p>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <div className="space-y-2">
+                  <span className="text-sm font-medium text-foreground">Search your hotel (Google Places)</span>
+                  <div className="relative flex gap-2">
                     <Input
                       value={hotelName}
                       onChange={e => handleHotelSearch(e.target.value)}
-                      placeholder="e.g. Hotel Splendido, Palazzo Luxury Hotel..."
-                      className="pl-10 h-11 bg-card"
+                      placeholder="Search by hotel name or location..."
+                      className="h-12 rounded-full px-5 bg-accent/30 border-border text-base flex-1"
                     />
-                    {suggestions.length > 0 && (
-                      <div className="absolute z-10 top-full mt-1 w-full bg-card border border-border rounded-lg shadow-lg">
-                        {suggestions.map(s => (
-                          <button key={s.name} onClick={() => selectPlace(s)} className="w-full text-left px-4 py-3 hover:bg-accent text-sm text-foreground border-b border-border last:border-0">
-                            <div className="flex items-center gap-2">
-                              <Building2 className="h-4 w-4 text-primary shrink-0" />
-                              <div>
-                                <span className="font-medium">{s.name}</span>
-                                <span className="text-muted-foreground block text-xs">{s.address}</span>
-                              </div>
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    )}
+                    <Button variant="outline" size="icon" className="h-12 w-12 rounded-full shrink-0 border-border">
+                      <Search className="h-5 w-5 text-muted-foreground" />
+                    </Button>
                   </div>
+                  {suggestions.length > 0 && (
+                    <div className="w-full bg-card border border-border rounded-xl shadow-lg overflow-hidden">
+                      {suggestions.map((s, i) => (
+                        <button
+                          key={s.name}
+                          onClick={() => selectPlace(s)}
+                          className="w-full text-left px-5 py-4 hover:bg-accent/40 transition-colors border-b border-border last:border-0"
+                        >
+                          <span className="font-semibold text-foreground block">{s.name}</span>
+                          <span className="text-muted-foreground text-sm">{s.address}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Auto-filled fields */}
