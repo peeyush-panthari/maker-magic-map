@@ -21,6 +21,7 @@ const SettingsPage = () => {
         <div className="text-sm space-y-2">
           <div className="flex justify-between p-3 rounded-lg bg-muted/50"><span className="text-muted-foreground">Name</span><span className="text-foreground font-medium">{user?.name}</span></div>
           <div className="flex justify-between p-3 rounded-lg bg-muted/50"><span className="text-muted-foreground">Email</span><span className="text-foreground font-medium">{user?.email}</span></div>
+          <div className="flex justify-between p-3 rounded-lg bg-muted/50"><span className="text-muted-foreground">Phone Number</span><span className="text-foreground font-medium">+1 (555) 123-4567</span></div>
           <div className="flex justify-between p-3 rounded-lg bg-muted/50"><span className="text-muted-foreground">Role</span><span className="text-foreground font-medium capitalize">{user?.role?.replace('_', ' ')}</span></div>
         </div>
       </div>
