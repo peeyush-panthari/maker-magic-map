@@ -1,12 +1,16 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Star, Building2, CheckCircle, XCircle, Clock, Filter, LogOut, BarChart3 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Star, Building2, CheckCircle, XCircle, Clock, Filter, LogOut, BarChart3, MapPin, Wifi, WifiOff, BedDouble, X, Camera, FileText, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MOCK_HOTELS } from '@/data/mockData';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
+import { Hotel } from '@/data/types';
 
 const AdminPage = () => {
   const { logout } = useAuth();
@@ -14,6 +18,7 @@ const AdminPage = () => {
   const { toast } = useToast();
   const [filter, setFilter] = useState<string>('all');
   const [hotels, setHotels] = useState(MOCK_HOTELS);
+  const [selectedHotel, setSelectedHotel] = useState<Hotel | null>(null);
 
   const filtered = hotels.filter(h => filter === 'all' || h.starRating === parseInt(filter));
 
@@ -103,7 +108,14 @@ const AdminPage = () => {
               <tbody>
                 {filtered.map(hotel => (
                   <tr key={hotel.id} className="border-b border-border last:border-0 hover:bg-muted/30">
-                    <td className="p-4 font-medium text-foreground">{hotel.name}</td>
+                    <td className="p-4">
+                      <button
+                        onClick={() => setSelectedHotel(hotel)}
+                        className="font-medium text-primary hover:underline text-left"
+                      >
+                        {hotel.name}
+                      </button>
+                    </td>
                     <td className="p-4 text-muted-foreground">{hotel.city}</td>
                     <td className="p-4">
                       <div className="flex gap-0.5">
@@ -140,8 +152,179 @@ const AdminPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Hotel Detail Dialog */}
+      <Dialog open={!!selectedHotel} onOpenChange={(open) => !open && setSelectedHotel(null)}>
+        <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
+          {selectedHotel && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-3">
+                  <Building2 className="h-5 w-5 text-primary" />
+                  {selectedHotel.name}
+                </DialogTitle>
+              </DialogHeader>
+
+              <div className="flex items-center gap-3 mt-1">
+                <div className="flex gap-0.5">
+                  {Array.from({ length: selectedHotel.starRating }).map((_, i) => (
+                    <Star key={i} className="h-4 w-4 text-primary fill-primary" />
+                  ))}
+                </div>
+                {statusBadge(selectedHotel.onboardingStatus)}
+                <span className="text-xs text-muted-foreground">ID: {selectedHotel.propertyId}</span>
+              </div>
+
+              <Tabs defaultValue="basics" className="mt-4">
+                <TabsList className="w-full justify-start">
+                  <TabsTrigger value="basics">Basic Details</TabsTrigger>
+                  <TabsTrigger value="rooms">Room Categories</TabsTrigger>
+                  <TabsTrigger value="content">Content</TabsTrigger>
+                  <TabsTrigger value="kyc">KYC & Compliance</TabsTrigger>
+                </TabsList>
+
+                {/* Basic Details */}
+                <TabsContent value="basics" className="space-y-4 mt-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <InfoRow icon={<MapPin className="h-4 w-4" />} label="Address" value={selectedHotel.address} />
+                    <InfoRow icon={<MapPin className="h-4 w-4" />} label="City" value={selectedHotel.city} />
+                    <InfoRow icon={<MapPin className="h-4 w-4" />} label="Coordinates" value={`${selectedHotel.coordinates.lat}, ${selectedHotel.coordinates.lng}`} />
+                    <InfoRow
+                      icon={selectedHotel.channelManagerConnected ? <Wifi className="h-4 w-4" /> : <WifiOff className="h-4 w-4" />}
+                      label="Channel Manager"
+                      value={selectedHotel.channelManagerConnected ? 'Connected' : 'Not Connected'}
+                    />
+                    <InfoRow icon={<BarChart3 className="h-4 w-4" />} label="Content Score" value={`${selectedHotel.contentScore}/100`} />
+                    <InfoRow icon={<BedDouble className="h-4 w-4" />} label="Total Rooms" value={String(selectedHotel.rooms.reduce((s, r) => s + r.count, 0))} />
+                  </div>
+                </TabsContent>
+
+                {/* Room Categories */}
+                <TabsContent value="rooms" className="space-y-4 mt-4">
+                  {selectedHotel.rooms.map(room => (
+                    <div key={room.type} className="rounded-lg border border-border p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <BedDouble className="h-4 w-4 text-primary" />
+                          <span className="font-medium text-foreground">{room.type}</span>
+                        </div>
+                        <span className="text-sm text-muted-foreground">{room.count} rooms</span>
+                      </div>
+                      <Separator className="my-3" />
+                      <div className="grid grid-cols-3 gap-4 text-sm">
+                        <div>
+                          <span className="text-muted-foreground">Base Rate</span>
+                          <p className="font-semibold text-foreground">€{room.baseRate}/night</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Room Count</span>
+                          <p className="font-semibold text-foreground">{room.count}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Category</span>
+                          <p className="font-semibold text-foreground">{room.type}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </TabsContent>
+
+                {/* Content */}
+                <TabsContent value="content" className="space-y-4 mt-4">
+                  <div className="rounded-lg border border-border p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <FileText className="h-4 w-4 text-primary" />
+                      <span className="font-medium text-foreground">Hotel Description</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      {selectedHotel.description || <span className="italic">No description provided</span>}
+                    </p>
+                  </div>
+
+                  <div className="rounded-lg border border-border p-4">
+                    <span className="font-medium text-foreground block mb-2">Amenities</span>
+                    {selectedHotel.amenities.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {selectedHotel.amenities.map(a => (
+                          <span key={a} className="px-3 py-1 rounded-full bg-accent text-accent-foreground text-xs font-medium">{a}</span>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground italic">No amenities listed</p>
+                    )}
+                  </div>
+
+                  <div className="rounded-lg border border-border p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Camera className="h-4 w-4 text-primary" />
+                      <span className="font-medium text-foreground">Photos</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{selectedHotel.photos.length} photos uploaded</p>
+                  </div>
+
+                  <div className="rounded-lg border border-border p-4">
+                    <span className="font-medium text-foreground block mb-2">Content Score</span>
+                    <div className="flex items-center gap-3">
+                      <div className="h-2 flex-1 bg-muted rounded-full overflow-hidden">
+                        <div className="h-full bg-primary rounded-full" style={{ width: `${selectedHotel.contentScore}%` }} />
+                      </div>
+                      <span className="text-lg font-bold text-foreground">{selectedHotel.contentScore}</span>
+                    </div>
+                  </div>
+                </TabsContent>
+
+                {/* KYC */}
+                <TabsContent value="kyc" className="space-y-4 mt-4">
+                  <div className="rounded-lg border border-border p-4 space-y-3">
+                    <div className="flex items-center gap-2 mb-1">
+                      <ShieldCheck className="h-4 w-4 text-primary" />
+                      <span className="font-medium text-foreground">KYC Documents</span>
+                    </div>
+                    {[
+                      { label: 'Government ID Proof', status: true },
+                      { label: 'Tax Registration (GST/VAT)', status: true },
+                      { label: 'Municipal License', status: selectedHotel.onboardingStatus === 'completed' },
+                      { label: 'Additional Documents', status: selectedHotel.onboardingStatus === 'completed' },
+                    ].map(doc => (
+                      <div key={doc.label} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+                        <span className="text-sm text-foreground">{doc.label}</span>
+                        {doc.status ? (
+                          <span className="flex items-center gap-1 text-xs font-medium text-success"><CheckCircle className="h-3.5 w-3.5" /> Verified</span>
+                        ) : (
+                          <span className="flex items-center gap-1 text-xs font-medium text-warning"><Clock className="h-3.5 w-3.5" /> Pending</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="rounded-lg border border-border p-4">
+                    <span className="font-medium text-foreground block mb-2">Contract Status</span>
+                    <div className="flex items-center gap-2">
+                      {selectedHotel.onboardingStatus === 'completed' ? (
+                        <span className="flex items-center gap-1 text-sm text-success"><CheckCircle className="h-4 w-4" /> Contract Signed & Active</span>
+                      ) : (
+                        <span className="flex items-center gap-1 text-sm text-warning"><Clock className="h-4 w-4" /> Contract Pending</span>
+                      )}
+                    </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
+
+const InfoRow = ({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) => (
+  <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+    <div className="text-primary mt-0.5">{icon}</div>
+    <div>
+      <span className="text-xs text-muted-foreground">{label}</span>
+      <p className="text-sm font-medium text-foreground">{value}</p>
+    </div>
+  </div>
+);
 
 export default AdminPage;
