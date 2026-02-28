@@ -11,6 +11,7 @@ import OnboardingCompletePage from "./pages/OnboardingCompletePage";
 import DashboardLayout from "./components/DashboardLayout";
 import DashboardHome from "./pages/dashboard/DashboardHome";
 import ContentPage from "./pages/dashboard/ContentPage";
+import BookingsPage from "./pages/dashboard/BookingsPage";
 import RatesPage from "./pages/dashboard/RatesPage";
 import PerformancePage from "./pages/dashboard/PerformancePage";
 import MarketIntelPage from "./pages/dashboard/MarketIntelPage";
@@ -35,6 +36,7 @@ const AppRoutes = () => (
     <Route path="/onboarding/complete" element={<OnboardingCompletePage />} />
     <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
       <Route index element={<DashboardHome />} />
+      <Route path="bookings" element={<BookingsPage />} />
       <Route path="content" element={<ContentPage />} />
       <Route path="rates" element={<RatesPage />} />
       <Route path="performance" element={<PerformancePage />} />
