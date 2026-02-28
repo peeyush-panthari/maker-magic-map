@@ -35,6 +35,7 @@ const OnboardingPage = () => {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [starRating, setStarRating] = useState('');
+  const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
   const [suggestions, setSuggestions] = useState<typeof MOCK_GOOGLE_PLACES>([]);
 
   // Step 2
@@ -64,7 +65,10 @@ const OnboardingPage = () => {
   const handleHotelSearch = (val: string) => {
     setHotelName(val);
     if (val.length > 2) {
-      setSuggestions(MOCK_GOOGLE_PLACES.filter(p => p.name.toLowerCase().includes(val.toLowerCase())));
+      setSuggestions(MOCK_GOOGLE_PLACES.filter(p =>
+        p.name.toLowerCase().includes(val.toLowerCase()) ||
+        p.address.toLowerCase().includes(val.toLowerCase())
+      ));
     } else {
       setSuggestions([]);
     }
@@ -74,7 +78,9 @@ const OnboardingPage = () => {
     setHotelName(place.name);
     setAddress(place.address);
     setPhone(place.phone);
+    setCoordinates(place.coordinates);
     setSuggestions([]);
+    toast({ title: 'Hotel Found!', description: `Auto-filled details for ${place.name}` });
   };
 
   const handleKycUpload = (field: keyof typeof kycUploads) => {
@@ -230,6 +236,18 @@ const OnboardingPage = () => {
                       </SelectContent>
                     </Select>
                   </div>
+                  {coordinates.lat !== 0 && (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label>Latitude</Label>
+                        <Input value={coordinates.lat} readOnly className="mt-1.5 bg-muted/50 text-muted-foreground" />
+                      </div>
+                      <div>
+                        <Label>Longitude</Label>
+                        <Input value={coordinates.lng} readOnly className="mt-1.5 bg-muted/50 text-muted-foreground" />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
