@@ -123,8 +123,7 @@ const OnboardingPage = () => {
 
   const handleSubmit = () => {
     const propId = `SH-${(hotelName || 'HTL').substring(0, 3).toUpperCase()}-${Math.floor(Math.random() * 900 + 100)}`;
-    toast({ title: '🎉 Onboarding Complete!', description: `Property ID: ${propId}. Welcome to Starhotels!` });
-    setTimeout(() => navigate('/dashboard'), 2000);
+    navigate(`/onboarding/complete?propertyId=${propId}`);
   };
 
   const updateRoom = (index: number, field: 'count' | 'baseRate', value: number) => {

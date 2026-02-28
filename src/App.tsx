@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import OnboardingPage from "./pages/OnboardingPage";
+import OnboardingCompletePage from "./pages/OnboardingCompletePage";
 import DashboardLayout from "./components/DashboardLayout";
 import DashboardHome from "./pages/dashboard/DashboardHome";
 import ContentPage from "./pages/dashboard/ContentPage";
@@ -31,6 +32,7 @@ const AppRoutes = () => (
     <Route path="/" element={<HomePage />} />
     <Route path="/login" element={<LoginPage />} />
     <Route path="/onboarding" element={<OnboardingPage />} />
+    <Route path="/onboarding/complete" element={<OnboardingCompletePage />} />
     <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
       <Route index element={<DashboardHome />} />
       <Route path="content" element={<ContentPage />} />
