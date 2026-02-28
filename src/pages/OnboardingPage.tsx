@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, ArrowLeft, ArrowRight, Check, Building2, BedDouble, FileText, Upload, Wifi, Palette, Send, Search } from 'lucide-react';
+import { Star, ArrowLeft, ArrowRight, Check, Building2, BedDouble, FileText, Upload, Wifi, Palette, Send, Search, ImagePlus, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -23,7 +23,7 @@ const STEPS = [
 ];
 
 const ALL_AMENITIES = ['WiFi', 'Pool', 'Spa', 'Restaurant', 'Bar', 'Gym', 'Concierge', 'Room Service', 'Parking', 'Business Center', 'Laundry', 'Airport Shuttle'];
-
+const ROOM_AMENITIES = ['Air Conditioning', 'Mini Bar', 'Safe', 'TV', 'Balcony', 'Coffee Maker', 'Bathrobe', 'Hair Dryer', 'Iron', 'Desk'];
 const OnboardingPage = () => {
   const [step, setStep] = useState(0);
   const navigate = useNavigate();
@@ -61,6 +61,10 @@ const OnboardingPage = () => {
   // Step 6
   const [description, setDescription] = useState('');
   const [amenities, setAmenities] = useState<string[]>([]);
+  const [hotelPhotos, setHotelPhotos] = useState<string[]>([]);
+  const [roomDescriptions, setRoomDescriptions] = useState<Record<string, string>>({});
+  const [roomAmenities, setRoomAmenities] = useState<Record<string, string[]>>({});
+  const [roomPhotos, setRoomPhotos] = useState<Record<string, string[]>>({});
 
   const handleHotelSearch = (val: string) => {
     setHotelName(val);
@@ -333,30 +337,145 @@ const OnboardingPage = () => {
 
             {/* Step 5: Content */}
             {step === 5 && (
-              <div className="space-y-5">
+              <div className="space-y-6">
                 <h2 className="text-xl font-bold text-foreground">Initial Content Setup</h2>
-                <div>
-                  <div className="flex items-center justify-between">
-                    <Label>Hotel Description</Label>
-                    <Button variant="ghost" size="sm" onClick={generateDescription} className="text-primary">Generate with AI</Button>
+
+                {/* Hotel Sub-section */}
+                <div className="rounded-xl border border-border p-5 space-y-4">
+                  <div className="flex items-center gap-2 border-b border-border pb-3">
+                    <Building2 className="h-5 w-5 text-primary" />
+                    <h3 className="font-semibold text-foreground text-lg">Hotel</h3>
                   </div>
-                  <Textarea value={description} onChange={e => setDescription(e.target.value)} className="mt-1.5 min-h-[100px]" placeholder="Describe your hotel..." />
+
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <Label>Hotel Description</Label>
+                      <Button variant="ghost" size="sm" onClick={generateDescription} className="text-primary gap-1">
+                        <Sparkles className="h-4 w-4" /> Generate with AI
+                      </Button>
+                    </div>
+                    <Textarea value={description} onChange={e => setDescription(e.target.value)} className="mt-1.5 min-h-[100px]" placeholder="Describe your hotel..." />
+                  </div>
+
+                  <div>
+                    <Label>Amenities</Label>
+                    <div className="grid grid-cols-3 gap-2 mt-2">
+                      {ALL_AMENITIES.map(a => (
+                        <label key={a} className="flex items-center gap-2 text-sm cursor-pointer">
+                          <Checkbox checked={amenities.includes(a)} onCheckedChange={checked => setAmenities(prev => checked ? [...prev, a] : prev.filter(x => x !== a))} />
+                          {a}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label>Add Images</Label>
+                    <div
+                      onClick={() => {
+                        const mockPhotos = ['hotel_exterior.jpg', 'hotel_lobby.jpg', 'hotel_pool.jpg', 'hotel_restaurant.jpg'];
+                        setHotelPhotos(prev => [...prev, ...mockPhotos]);
+                        toast({ title: 'Hotel photos uploaded', description: `${mockPhotos.length} photos added` });
+                      }}
+                      className="mt-1.5 border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer hover:border-primary/40 transition-colors"
+                    >
+                      <ImagePlus className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                      <p className="text-muted-foreground text-sm">Click to upload hotel photos</p>
+                    </div>
+                    {hotelPhotos.length > 0 && (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {hotelPhotos.map((p, i) => (
+                          <span key={i} className="px-3 py-1.5 rounded-lg bg-accent text-accent-foreground text-xs font-medium">📷 {p}</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <Label>Amenities</Label>
-                  <div className="grid grid-cols-3 gap-2 mt-2">
-                    {ALL_AMENITIES.map(a => (
-                      <label key={a} className="flex items-center gap-2 text-sm cursor-pointer">
-                        <Checkbox
-                          checked={amenities.includes(a)}
-                          onCheckedChange={checked => {
-                            setAmenities(prev => checked ? [...prev, a] : prev.filter(x => x !== a));
-                          }}
-                        />
-                        {a}
-                      </label>
-                    ))}
+
+                {/* Room Sub-section */}
+                <div className="rounded-xl border border-border p-5 space-y-4">
+                  <div className="flex items-center gap-2 border-b border-border pb-3">
+                    <BedDouble className="h-5 w-5 text-primary" />
+                    <h3 className="font-semibold text-foreground text-lg">Rooms</h3>
                   </div>
+
+                  {rooms.filter(r => r.count > 0).length === 0 && (
+                    <p className="text-sm text-muted-foreground italic">No rooms configured yet. Go back to Room Details to add rooms.</p>
+                  )}
+
+                  {rooms.filter(r => r.count > 0).map(room => (
+                    <div key={room.type} className="rounded-lg border border-border p-4 space-y-4">
+                      <div className="flex items-center gap-2">
+                        <BedDouble className="h-4 w-4 text-primary" />
+                        <span className="font-medium text-foreground">{room.type}</span>
+                        <span className="text-xs text-muted-foreground">({room.count} rooms)</span>
+                      </div>
+
+                      {/* Room Description */}
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <Label className="text-sm">Room Description</Label>
+                          <Button variant="ghost" size="sm" className="text-primary gap-1 text-xs h-7" onClick={() => {
+                            setRoomDescriptions(prev => ({
+                              ...prev,
+                              [room.type]: `Experience our ${room.type} room at ${hotelName || 'our hotel'}. Featuring modern comforts and elegant design, perfect for both leisure and business travelers in ${address || 'a prime location'}.`
+                            }));
+                            toast({ title: 'AI description generated' });
+                          }}>
+                            <Sparkles className="h-3 w-3" /> Generate
+                          </Button>
+                        </div>
+                        <Textarea
+                          value={roomDescriptions[room.type] || ''}
+                          onChange={e => setRoomDescriptions(prev => ({ ...prev, [room.type]: e.target.value }))}
+                          className="mt-1 min-h-[70px]"
+                          placeholder={`Describe your ${room.type} room...`}
+                        />
+                      </div>
+
+                      {/* Room Amenities */}
+                      <div>
+                        <Label className="text-sm">Amenities</Label>
+                        <div className="grid grid-cols-3 md:grid-cols-5 gap-2 mt-1.5">
+                          {ROOM_AMENITIES.map(a => (
+                            <label key={a} className="flex items-center gap-1.5 text-xs cursor-pointer">
+                              <Checkbox
+                                checked={(roomAmenities[room.type] || []).includes(a)}
+                                onCheckedChange={checked => setRoomAmenities(prev => ({
+                                  ...prev,
+                                  [room.type]: checked ? [...(prev[room.type] || []), a] : (prev[room.type] || []).filter(x => x !== a)
+                                }))}
+                              />
+                              {a}
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Room Photos */}
+                      <div>
+                        <Label className="text-sm">Add Images</Label>
+                        <div
+                          onClick={() => {
+                            const mockPhotos = [`${room.type.toLowerCase().replace(/\s/g, '_')}_1.jpg`, `${room.type.toLowerCase().replace(/\s/g, '_')}_2.jpg`];
+                            setRoomPhotos(prev => ({ ...prev, [room.type]: [...(prev[room.type] || []), ...mockPhotos] }));
+                            toast({ title: `${room.type} photos uploaded` });
+                          }}
+                          className="mt-1 border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-primary/40 transition-colors"
+                        >
+                          <ImagePlus className="h-6 w-6 text-muted-foreground mx-auto mb-1" />
+                          <p className="text-muted-foreground text-xs">Click to upload {room.type} photos</p>
+                        </div>
+                        {(roomPhotos[room.type] || []).length > 0 && (
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            {(roomPhotos[room.type] || []).map((p, i) => (
+                              <span key={i} className="px-2 py-1 rounded-lg bg-accent text-accent-foreground text-xs">📷 {p}</span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
