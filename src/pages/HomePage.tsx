@@ -54,7 +54,7 @@ const HomePage = () => {
               Extranet 2.0 — Now Live
             </span>
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-foreground leading-tight mb-6">
-              Grow Your Hotel<br />
+              Grow Your Hotel's<br />
               <span className="text-primary">Business With Us</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
